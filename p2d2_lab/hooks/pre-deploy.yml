@@ -1,0 +1,10 @@
+######################################################################
+## Create the training user, pwd in args.yml
+######################################################################
+
+- name: create the training user
+  user:
+    name: training
+    groups: "sudo"
+    password: "{{ trainingpwd | password_hash('sha256') }}"
+    shell: /bin/bash

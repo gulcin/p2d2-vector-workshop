@@ -1,0 +1,71 @@
+---
+architecture: M1
+cluster_name: p2d2_lab
+cluster_tags: {}
+
+keyring_backend: system
+vault_name: df7de378-da1f-49f1-8e5a-cfb1702f2a35
+
+cluster_rules:
+- cidr_ip: <you_ip_here>/32
+  from_port: 22
+  proto: tcp
+  to_port: 22
+- cidr_ip: 10.33.34.224/28
+  from_port: 0
+  proto: tcp
+  to_port: 65535
+- cidr_ip: 0.0.0.0/0
+  from_port: 443
+  proto: tcp
+  to_port: 443
+ec2_ami:
+  Name: ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-20240228
+  Owner: 099720109477
+ec2_instance_reachability: public
+ec2_vpc:
+  eu-west-1:
+    Name: p2d2
+    cidr: 10.33.0.0/16
+
+cluster_vars:
+  failover_manager: repmgr
+  postgres_flavour: postgresql
+  postgres_version: '16'
+  preferred_python_version: python3
+  use_volatile_subscriptions: false
+  packages:
+    Ubuntu:
+      - jq
+      - git
+      - shellinabox
+
+locations:
+- Name: main
+  az: eu-west-1a
+  region: eu-west-1
+  subnet: 10.33.34.224/28
+
+instance_defaults:
+  default_volumes:
+  - device_name: root
+    encrypted: true
+    volume_size: 16
+    volume_type: gp2
+  platform: aws
+  type: t3.large
+  vars:
+    ansible_user: ubuntu
+
+instances:
+- Name: datasets
+  type: t3.micro
+  location: main
+  node: 1
+  role:
+  - primary
+- Name: p2d2lab01
+  location: main
+  node: 2
+  role:
+  - primary
