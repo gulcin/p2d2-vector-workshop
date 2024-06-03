@@ -11,3 +11,131 @@
   shell: >
     sudo invoke-rc.d shellinabox restart
   become: yes
+
+######################################################################
+# Install Python Dependencies
+######################################################################
+
+- name: Install imgbeddings
+  shell: >
+    sudo /usr/bin/pip install imgbeddings
+  become: yes
+
+######################################################################
+# Work around to change owner of databases
+######################################################################
+
+- name: Fix database ownership for lab01
+  postgresql_query:
+    conninfo: "{{ dsn|dbname('postgres') }}"
+    query: >
+      ALTER DATABASE {{ item.db }} OWNER TO {{ item.user }};
+  with_items:
+    - { db: 'p2d2db01', user: 'user01' }
+    - { db: 'p2d2db02', user: 'user02' }
+    - { db: 'p2d2db03', user: 'user03' }
+    - { db: 'p2d2db04', user: 'user04' }
+    - { db: 'p2d2db05', user: 'user05' }
+  become_user: "{{ postgres_user }}"
+  become: yes
+  when:
+    inventory_hostname == 'p2d2lab01'
+
+- name: Fix database ownership lab02
+  postgresql_query:
+    conninfo: "{{ dsn|dbname('postgres') }}"
+    query: >
+      ALTER DATABASE {{ item.db }} OWNER TO {{ item.user }};
+  with_items:
+    - { db: 'p2d2db06', user: 'user06' }
+    - { db: 'p2d2db07', user: 'user07' }
+    - { db: 'p2d2db08', user: 'user08' }
+    - { db: 'p2d2db09', user: 'user09' }
+    - { db: 'p2d2db10', user: 'user10' }
+  become_user: "{{ postgres_user }}"
+  become: yes
+  when:
+    inventory_hostname == 'p2d2lab02'
+
+######################################################################
+# Prepare ssh for dataset user
+#######################################################################
+
+- name: Make sure .ssh exists for user dataset
+  file:
+    path: /home/dataset/.ssh
+    state: directory
+    owner: dataset
+    group: dataset
+    mode: 0700
+  become: yes
+
+- name: Copy the private to connect to the dataset server
+  copy:
+    src: files/id_dataset
+    dest: /home/dataset/.ssh/id_dataset
+    owner: dataset
+    group: dataset
+    mode: 0600
+  become: yes
+
+- name: Copy the authorized keys to the dataset server
+  copy:
+    src: files/authorized_keys
+    dest: /home/dataset/.ssh/authorized_keys
+    owner: dataset
+    group: dataset
+    mode: 0600
+  become: yes
+
+######################################################################
+# Copy the dataset to p2d2dataset if needed
+#######################################################################
+
+- name: Check if dataset tarball exists at dataset server
+  stat:
+    path: /home/dataset/chihuahua_muffin.tgz
+  register: tarball
+  when: inventory_hostname == 'p2d2dataset'
+
+- name: Copy tarball to the dataset server 
+  copy:
+    src: files/chihuahua_muffin.tgz
+    dest: /home/dataset/
+    owner: dataset
+    group: dataset
+    mode: 0644
+  become: yes
+  when: inventory_hostname == 'p2d2dataset' and not tarball.stat.exists
+
+######################################################################
+# Copy the dataset from p2d2dataset to the lab machines
+#######################################################################
+
+- name: Check if dataset tarball exists
+  stat:
+    path: /home/dataset/chihuahua_muffin.tgz
+  register: tarball
+  when: not inventory_hostname == 'p2d2dataset'
+
+- name: Pull the dataset tarball if needed
+  shell: >
+    scp -i /home/dataset/.ssh/id_dataset dataset@p2d2dataset:chihuahua_muffin.tgz /home/dataset/
+  become: dataset
+  become: yes
+  when: not inventory_hostname == 'p2d2dataset' and not tarball.stat.exists
+
+- name: Check if dataset is untared
+  stat:
+    path: /home/dataset/chihuahua_muffin
+  register: datasetdir
+  when: not inventory_hostname == 'p2d2dataset'
+
+- name: Untar the dataset if needed
+  shell: >
+    tar -zxvf chihuahua_muffin.tgz
+  args:
+    chdir: /home/dataset/
+  become: dataset
+  become: yes
+  when: not inventory_hostname == 'p2d2dataset' and not datasetdir.stat.exists 

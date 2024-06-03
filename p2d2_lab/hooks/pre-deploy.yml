@@ -2,9 +2,39 @@
 ## Create the training user, pwd in args.yml
 ######################################################################
 
-- name: create the training user
+- name: create the dataset user
   user:
-    name: user
-    groups: "sudo"
-    password: "{{ userpwd | password_hash('sha256') }}"
+    name: dataset
     shell: /bin/bash
+
+- name: create the user
+  user:
+    name: "{{ item.username }}"
+    password: "{{ item.passwd | password_hash('sha256') }}"
+    shell: /bin/bash
+  with_items:
+    - { username: 'user01', passwd: "{{ user01pwd }}" }
+    - { username: 'user02', passwd: "{{ user02pwd }}" }
+    - { username: 'user03', passwd: "{{ user03pwd }}" }
+    - { username: 'user04', passwd: "{{ user04pwd }}" }
+    - { username: 'user05', passwd: "{{ user05pwd }}" }
+    - { username: 'user06', passwd: "{{ user06pwd }}" }
+    - { username: 'user07', passwd: "{{ user07pwd }}" }
+    - { username: 'user08', passwd: "{{ user08pwd }}" }
+    - { username: 'user09', passwd: "{{ user09pwd }}" }
+    - { username: 'user10', passwd: "{{ user10pwd }}" }
+    - { username: 'user11', passwd: "{{ user11pwd }}" }
+    - { username: 'user12', passwd: "{{ user12pwd }}" }
+    - { username: 'user13', passwd: "{{ user13pwd }}" }
+    - { username: 'user14', passwd: "{{ user14pwd }}" }
+    - { username: 'user15', passwd: "{{ user15pwd }}" }
+    - { username: 'user16', passwd: "{{ user16pwd }}" }
+    - { username: 'user17', passwd: "{{ user17pwd }}" }
+    - { username: 'user18', passwd: "{{ user18pwd }}" }
+    - { username: 'user19', passwd: "{{ user19pwd }}" }
+    - { username: 'user20', passwd: "{{ user20pwd }}" }
+    - { username: 'user21', passwd: "{{ user21pwd }}" }
+    - { username: 'user22', passwd: "{{ user22pwd }}" }
+    - { username: 'user23', passwd: "{{ user23pwd }}" }
+    - { username: 'user24', passwd: "{{ user24pwd }}" }
+    - { username: 'user25', passwd: "{{ user25pwd }}" }
