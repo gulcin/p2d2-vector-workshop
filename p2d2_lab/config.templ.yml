@@ -15,10 +15,16 @@ cluster_rules:
   from_port: 0
   proto: tcp
   to_port: 65535
+  # Allow connection to shellinabox
 - cidr_ip: 0.0.0.0/0
   from_port: 443
   proto: tcp
   to_port: 443
+  # Allow connection to http servers
+- cidr_ip: 0.0.0.0/0
+  from_port: 8000
+  proto: tcp
+  to_port: 8030
 ec2_ami:
   Name: ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-20240228
   Owner: 099720109477
@@ -39,6 +45,12 @@ cluster_vars:
       - jq
       - git
       - shellinabox
+      - python3-pip
+  extra_postgres_packages:
+    common:
+      - postgresql-16-pgvector
+  extra_postgres_extensions:
+  - vector
 
 locations:
 - Name: main
@@ -50,22 +62,93 @@ instance_defaults:
   default_volumes:
   - device_name: root
     encrypted: true
-    volume_size: 16
+    volume_size: 32
     volume_type: gp2
   platform: aws
-  type: t3.large
+  type: t3.xlarge
   vars:
     ansible_user: ubuntu
 
 instances:
-- Name: datasets
-  type: t3.micro
+- Name: p2d2lab01
   location: main
   node: 1
   role:
   - primary
-- Name: p2d2lab01
+  vars:
+    published_ports:
+      - "8001:8001"
+      - "8002:8002"
+      - "8003:8003"
+      - "8004:8004"
+      - "8005:8005"
+    postgres_users:
+    - username: user01
+    - username: user02
+    - username: user03
+    - username: user04
+    - username: user05
+    postgres_databases:
+    - name: p2d2db01
+      owner: user01
+      extensions: []
+    - name: p2d2db02
+      owner: user02
+      extensions: []
+    - name: p2d2db03
+      owner: user03
+      extensions: []
+    - name: p2d2db04
+      owner: user04
+      extensions: []
+    - name: p2d2db05
+      owner: user05
+      extensions: []
+
+- Name: p2d2lab02
   location: main
   node: 2
   role:
   - primary
+  vars:
+    published_ports:
+      - "8006:8006"
+      - "8007:8007"
+      - "8008:8008"
+      - "8009:8009"
+      - "8010:8010"
+    postgres_users:
+    - username: user06
+    - username: user07
+    - username: user08
+    - username: user09
+    - username: user10
+    postgres_databases:
+    - name: p2d2db06
+      owner: user06
+      extensions: []
+    - name: p2d2db07
+      owner: user07
+      extensions: []
+    - name: p2d2db08
+      owner: user08
+      extensions: []
+    - name: p2d2db09
+      owner: user09
+      extensions: []
+    - name: p2d2db10
+      owner: user10
+      extensions: []
+
+- Name: p2d2dataset
+  location: main
+  node: 6
+  role:
+  - primary
+  vars:
+    type: t3.micro
+    default_volumes:
+    - device_name: root
+      encrypted: true
+      volume_size: 16
+      volume_type: gp2
