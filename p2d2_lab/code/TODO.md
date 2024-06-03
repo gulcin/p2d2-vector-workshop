@@ -1,11 +1,11 @@
 
-Slides INTRO Boriss 
+Slides INTRO Boriss
 
     CREATE TABLE
 
-    TODO: Create template and upload it
-
 Slides Python load code Boriss
+
+    TODO: Create template and upload it
 
     Edit Python Template
 
@@ -24,6 +24,13 @@ Slides operators Gülçin
 
     Test different operators: <-> <+> <=> <#>
     With SELECT queries
+
+select id, filename from p2d2.pictures where filename ~ '/chihuahua/' limit 10;
+
+select id, filename from p2d2.pictures where filename ~ '/muffin/' limit 10;
+
+select embedding <-> (select embedding from p2d2.pictures where id=1) from p2d2.pictures where id =2;
+
 
 
 Slides indexes and search Gülçin
