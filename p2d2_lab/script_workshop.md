@@ -1,51 +1,62 @@
+# The Workshop is presented as set of Slides and Hands-on Exercises
 
-Slides INTRO Boriss
+1. [Boriss] Slides INTRO until "Lab - Part I", showing the ALTER TABLE
 
-    CREATE TABLE
+Hands-on:
 
-Slides Python load code Boriss
+    * CREATE TABLE
 
-    TODO: Create template and upload it
-
-    Edit Python Template
-
-    Run Load embedding for chihuahuas
-
-    TODO: write command
-    ./load_embeddings.py /home/dataset/chihuahua_muffin/chihuahua /var/run /postgresql 5432 p2d2db03 user03
+2. [Boriss] "Lab - Part II" until example with `load_embeddings.py`
 
 
-    Run Load embedding for muffins
+Hands-on:
+
+    * Edit Python Template
+
+    * Run Load embedding for chihuahuas and muffins
+
+    * example:
+
+    ./load_embeddings.py /home/dataset/chihuahua_muffin/chihuahua \
+                         /var/run /postgresql 5432 p2d2db03 user03
 
 
-Slides operators Gülçin
+3. [Gülçin] "Lab - Part III" querying
 
-    Pick three images: 2 similar
+Hands-on:
 
-    Test different operators: <-> <+> <=> <#>
-    With SELECT queries
+    * Pick three images: 2 similar and one different, by picking up info from
+      the path to the file:
 
+```sql
 select id, filename from p2d2.pictures where filename ~ '/chihuahua/' limit 10;
 
 select id, filename from p2d2.pictures where filename ~ '/muffin/' limit 10;
+```
 
-select embedding <-> (select embedding from p2d2.pictures where id=1) from p2d2.pictures where id =2;
+    * Test different operators: <-> <+> <=> <#> With SELECT queries
+
+```sql
+select embedding <-> (select embedding from p2d2.pictures where id=1)
+from p2d2.pictures where id =2;
+```
+
+4. [Gülçin] "Lab - Part IV" indexing
+
+Hands-on:
+
+    * Create indexes as in the slides
 
 
+5. [Boriss] "Lab - Part V" The Challenge
 
-Slides indexes and search Gülçin
+Hands-on:
 
-    TODO: Create indexes
+    * Edit template the_challenge/challenge.py
+
+    * display files with `python3 -m http.server 8042`
+
+    * Use a different vector operator
 
 
-Slides Challenge + Python code Boriss
-
-    TODO: Python code to find similar values
-    input: challenge image
-    output: 10 closest images
-
-    display files with http.server
-
-    Play with operator
-
-Closing Slides
+6. [Boriss-Gülçin] Closing Slides
