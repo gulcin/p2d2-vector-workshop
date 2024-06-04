@@ -140,6 +140,111 @@ instances:
       owner: user10
       extensions: []
 
+- Name: p2d2lab03
+  location: main
+  node: 3
+  role:
+  - primary
+  vars:
+    published_ports:
+      - "8011:8011"
+      - "8012:8012"
+      - "8013:8013"
+      - "8014:8014"
+      - "8015:8015"
+    postgres_users:
+    - username: user11
+    - username: user12
+    - username: user13
+    - username: user14
+    - username: user15
+    postgres_databases:
+    - name: p2d2db11
+      owner: user11
+      extensions: []
+    - name: p2d2db12
+      owner: user12
+      extensions: []
+    - name: p2d2db13
+      owner: user13
+      extensions: []
+    - name: p2d2db14
+      owner: user14
+      extensions: []
+    - name: p2d2db15
+      owner: user15
+      extensions: []
+
+- Name: p2d2lab04
+  location: main
+  node: 4
+  role:
+  - primary
+  vars:
+    published_ports:
+      - "8016:8016"
+      - "8017:8017"
+      - "8018:8018"
+      - "8019:8019"
+      - "8020:8020"
+    postgres_users:
+    - username: user16
+    - username: user17
+    - username: user18
+    - username: user19
+    - username: user20
+    postgres_databases:
+    - name: p2d2db16
+      owner: user16
+      extensions: []
+    - name: p2d2db17
+      owner: user17
+      extensions: []
+    - name: p2d2db18
+      owner: user18
+      extensions: []
+    - name: p2d2db19
+      owner: user19
+      extensions: []
+    - name: p2d2db20
+      owner: user20
+      extensions: []
+
+- Name: p2d2lab05
+  location: main
+  node: 5
+  role:
+  - primary
+  vars:
+    published_ports:
+      - "8021:8021"
+      - "8022:8022"
+      - "8023:8023"
+      - "8024:8024"
+      - "8025:8025"
+    postgres_users:
+    - username: user21
+    - username: user22
+    - username: user23
+    - username: user24
+    - username: user25
+    postgres_databases:
+    - name: p2d2db21
+      owner: user21
+      extensions: []
+    - name: p2d2db22
+      owner: user22
+      extensions: []
+    - name: p2d2db23
+      owner: user23
+      extensions: []
+    - name: p2d2db24
+      owner: user24
+      extensions: []
+    - name: p2d2db25
+      owner: user25
+      extensions: []
+
 - Name: p2d2dataset
   location: main
   node: 6

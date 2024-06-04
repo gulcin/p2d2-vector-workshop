@@ -139,3 +139,99 @@
   become: dataset
   become: yes
   when: not inventory_hostname == 'p2d2dataset' and not datasetdir.stat.exists 
+
+######################################################################
+# Upload templates
+######################################################################
+
+- set_fact:
+    the_users:
+      - 'user01'
+      - 'user02'
+      - 'user03'
+      - 'user04'
+      - 'user05'
+      - 'user06'
+      - 'user07'
+      - 'user08'
+      - 'user09'
+      - 'user10'
+      - 'user11'
+      - 'user12'
+      - 'user13'
+      - 'user14'
+      - 'user15'
+      - 'user16'
+      - 'user17'
+      - 'user18'
+      - 'user19'
+      - 'user20'
+      - 'user21'
+      - 'user22'
+      - 'user23'
+      - 'user24'
+      - 'user25'
+
+- name: Make sure .load_embeddings exists for all users
+  file:
+    path: "/home/{{ item }}/.load_embeddings"
+    state: directory
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: 0700
+  become: yes
+  with_items:
+    - "{{ the_users }}"
+
+- name: Copy template for load_embeddings
+  copy:
+    src: files/load_embeddings_template.py
+    dest: "/home/{{ item }}/.load_embeddings/load_embeddings.py"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: 0700
+  become: yes
+  with_items:
+    - "{{ the_users }}"
+
+- name: Remove .the_callenge
+  file:
+    path: "/home/{{ item }}/.the_callenge"
+    state: absent
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: 0700
+  become: yes
+  with_items:
+    - "{{ the_users }}"
+
+- name: Make sure .the_challenge exists for all users
+  file:
+    path: "/home/{{ item }}/.the_challenge"
+    state: directory
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: 0700
+  become: yes
+  with_items:
+    - "{{ the_users }}"
+
+- name: Make sure symlink to home exists inside .the_challenge
+  file:
+    src: /home
+    dest: "/home/{{ item }}/.the_challenge/home"
+    state: link
+  become: yes
+  with_items:
+    - "{{ the_users }}"
+
+- name: Make sure symlink to home exists inside .the_challenge
+  copy:
+    src: files/challenge_template.py
+    dest: "/home/{{ item }}/.the_challenge/chihuahua_or_muffin.py"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: 0700
+  become: yes
+  with_items:
+    - "{{ the_users }}"
